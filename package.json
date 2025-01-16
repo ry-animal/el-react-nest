@@ -1,0 +1,19 @@
+{
+  "name": "el-react-nest",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "rimraf node_modules pnpm-lock.yaml"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "typescript": "^5.0.0",
+    "prettier": "^2.8.8",
+    "eslint": "^8.40.0",
+    "rimraf": "^5.0.0",
+    "@types/node": "^18.16.3"
+  }
+}
