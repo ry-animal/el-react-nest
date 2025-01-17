@@ -130,7 +130,7 @@ const AVSBubbleChart = ({ data, selectedId }: AVSBubbleChartProps) => {
                         formatter={(value) => <span className="font-mono">{value}</span>}
                         iconType="circle"
                         layout="horizontal"
-                        wordSpacing={isMobile ? '2' : '8'}
+
                         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                     />
                     {chartData.map((entry, index) => (

@@ -1,17 +1,23 @@
-import { defineConfig } from 'vite';
+/// <reference types="vite/client" />
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import svgr from '@svgr/rollup';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), svgr()],
-  resolve: {
-    alias: {
-      shared: path.resolve(__dirname, '../../packages/shared/src'),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  return {
+    plugins: [react(), svgr()],
+    resolve: {
+      alias: {
+        shared: path.resolve(__dirname, '../../packages/shared/src'),
+      },
     },
-  },
-  server: {
-    port: 3000,
-  },
+    server: {
+      port: 3000,
+    },
+    define: {
+      'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
+    }
+  };
 });
