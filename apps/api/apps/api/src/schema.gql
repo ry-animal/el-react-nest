@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AVS {
+  id: String!
+  owner: String!
+  operatorCount: Int!
+  operatorSetCount: Int!
+  slashingCount: Int!
+  strategyCount: Int!
+  stakerCount: Int!
+  metadataURI: String!
+  lastUpdateBlockNumber: String!
+  lastUpdateBlockTimestamp: String!
+}
+
+type Query {
+  getAVSData: [AVS!]!
+}

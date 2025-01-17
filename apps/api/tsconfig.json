@@ -14,7 +14,9 @@
     "paths": {
       "shared/*": ["../../packages/shared/src/*"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "esModuleInterop": true,
+    "lib": ["esnext", "DOM"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
