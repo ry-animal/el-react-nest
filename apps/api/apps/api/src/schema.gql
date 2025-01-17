@@ -4,17 +4,17 @@
 
 type AVS {
   id: String!
-  owner: String!
-  operatorCount: Int!
-  operatorSetCount: Int!
-  slashingCount: Int!
-  strategyCount: Int!
-  stakerCount: Int!
-  metadataURI: String!
   lastUpdateBlockNumber: String!
   lastUpdateBlockTimestamp: String!
+  metadataURI: String!
+  operatorCount: Int!
+  operatorSetCount: Int!
+  owner: String!
+  slashingCount: Int!
+  stakerCount: Int!
+  strategyCount: Int!
 }
 
 type Query {
-  getAVSData: [AVS!]!
+  getAVSData(first: Int! = 10, orderBy: String! = "lastUpdateBlockTimestamp", orderDirection: String! = "desc", skip: Int! = 0): [AVS!]!
 }

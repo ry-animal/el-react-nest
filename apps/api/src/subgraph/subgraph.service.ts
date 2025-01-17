@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ApolloClient, InMemoryCache, gql, HttpLink } from '@apollo/client/core';
 import fetch from 'cross-fetch';
+import { SortField, SortDirection } from './models/sort.model';
 
 @Injectable()
 export class SubgraphService {
@@ -21,10 +22,15 @@ export class SubgraphService {
     });
   }
 
-  async getAVSData(): Promise<any> {
-    const AVS_QUERY = gql`
-      query {
-        avss(first: 10) {
+  async getAVSData(skip = 0, first = 10, orderBy = 'lastUpdateBlockTimestamp', orderDirection = 'desc') {
+    const query = gql`
+      query GetAVSData($skip: Int!, $first: Int!, $orderBy: String!, $orderDirection: String!) {
+        avss(
+          skip: $skip, 
+          first: $first,
+          orderBy: $orderBy,
+          orderDirection: $orderDirection
+        ) {
           id
           owner
           operatorCount
@@ -39,24 +45,10 @@ export class SubgraphService {
       }
     `;
 
-    try {
-      const { data } = await this.client.query({
-        query: AVS_QUERY,
-      });
-      
-      console.log('Subgraph Response:', data);
-      
-      if (!data || !data.avss) {
-        throw new Error('No data received from subgraph');
-      }
-
-      return data.avss;
-    } catch (error) {
-      console.error('Subgraph Error:', error);
-      throw new HttpException(
-        `Failed to fetch AVS data: ${error.message}`,
-        HttpStatus.BAD_GATEWAY
-      );
-    }
+    const { data } = await this.client.query({
+      query,
+      variables: { skip, first, orderBy, orderDirection }
+    });
+    return data.avss;
   }
 }

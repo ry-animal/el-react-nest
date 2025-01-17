@@ -22,7 +22,7 @@ export interface AVS {
 }
 
 export interface IQuery {
-    getAVSData(): AVS[] | Promise<AVS[]>;
+    getAVSData(skip: number, first: number, orderBy: string, orderDirection: string): AVS[] | Promise<AVS[]>;
 }
 
 type Nullable<T> = T | null;

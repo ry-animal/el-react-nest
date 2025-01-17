@@ -9,12 +9,10 @@ import { join } from 'path';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
+      sortSchema: true,
       playground: true,
-      definitions: {
-        path: join(process.cwd(), 'apps/api/src/graphql.ts'),
-      },
     }),
-    SubgraphModule
+    SubgraphModule,
   ],
 })
 export class AppModule {} 
