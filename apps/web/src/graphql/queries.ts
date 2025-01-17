@@ -6,13 +6,11 @@ export const GET_AVS_DATA = gql`
       id
       owner
       operatorCount
-      operatorSetCount
-      slashingCount
       strategyCount
       stakerCount
-      metadataURI
-      lastUpdateBlockNumber
+      slashingCount
       lastUpdateBlockTimestamp
+      metadataURI
     }
   }
 `;

@@ -6,7 +6,7 @@ export interface AVS {
   slashingCount: number;
   strategyCount: number;
   stakerCount: number;
-  metadataURI: string;
+  metadataURI: string | null;
   lastUpdateBlockNumber: string;
   lastUpdateBlockTimestamp: string;
 } 

@@ -1,54 +1,38 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ApolloClient, InMemoryCache, gql, HttpLink } from '@apollo/client/core';
-import fetch from 'cross-fetch';
-import { SortField, SortDirection } from './models/sort.model';
+import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class SubgraphService {
-  private client: ApolloClient<any>;
+    private readonly endpoint = 'https://subgraph.satsuma-prod.com/...';
 
-  constructor() {
-    this.client = new ApolloClient({
-      link: new HttpLink({
-        uri: 'https://subgraph.satsuma-prod.com/027e731a6242/eigenlabs/eigen-graph-testnet-holesky/api',
-        fetch,
-      }),
-      cache: new InMemoryCache(),
-      defaultOptions: {
-        query: {
-          fetchPolicy: 'no-cache',
-        },
-      },
-    });
-  }
+    constructor(private readonly httpService: HttpService) {}
 
-  async getAVSData(skip = 0, first = 10, orderBy = 'lastUpdateBlockTimestamp', orderDirection = 'desc') {
-    const query = gql`
-      query GetAVSData($skip: Int!, $first: Int!, $orderBy: String!, $orderDirection: String!) {
-        avss(
-          skip: $skip, 
-          first: $first,
-          orderBy: $orderBy,
-          orderDirection: $orderDirection
-        ) {
-          id
-          owner
-          operatorCount
-          operatorSetCount
-          slashingCount
-          strategyCount
-          stakerCount
-          metadataURI
-          lastUpdateBlockNumber
-          lastUpdateBlockTimestamp
-        }
-      }
-    `;
+    async getAVSData(skip: number, first: number, orderBy: string, orderDirection: string) {
+        const query = `
+            query GetAVSData($skip: Int!, $first: Int!, $orderBy: String!, $orderDirection: String!) {
+                avses(skip: $skip, first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+                    id
+                    owner
+                    operatorCount
+                    operatorSetCount
+                    strategyCount
+                    stakerCount
+                    slashingCount
+                    lastUpdateBlockNumber
+                    lastUpdateBlockTimestamp
+                    metadataURI
+                }
+            }
+        `;
 
-    const { data } = await this.client.query({
-      query,
-      variables: { skip, first, orderBy, orderDirection }
-    });
-    return data.avss;
-  }
+        const response = await firstValueFrom(
+            this.httpService.post(this.endpoint, {
+                query,
+                variables: { skip, first, orderBy, orderDirection }
+            })
+        );
+
+        return response.data.data.avses;
+    }
 }
