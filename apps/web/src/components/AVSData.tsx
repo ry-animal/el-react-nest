@@ -4,6 +4,7 @@ import { AVS } from '../types/avs';
 import { useState, useEffect } from 'react';
 import { SortField, SortDirection, formatAddress, formatTimestamp, CONSTANTS } from '@el-react-nest/shared';
 import AVSBubbleChart from './AVSBubbleChart';
+import { MetadataModal } from './MetadataModal';
 
 interface AVSQueryResult {
     getAVSData: AVS[];
@@ -15,6 +16,7 @@ const AVSData = () => {
     const [sortField, setSortField] = useState<SortField>(SortField.LAST_UPDATE_TIMESTAMP);
     const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
     const [selectedAVSId, setSelectedAVSId] = useState<string>();
+    const [selectedMetadata, setSelectedMetadata] = useState<string | null>(null);
 
     const { data, loading, error } = useQuery<AVSQueryResult>(GET_AVS_DATA, {
         variables: {
@@ -144,14 +146,15 @@ const AVSData = () => {
                                     </td>
                                     <td className="px-2 sm:px-4 py-3">
                                         {avs.metadataURI ? (
-                                            <a
-                                                href={avs.metadataURI}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedMetadata(avs.metadataURI);
+                                                }}
                                                 className="text-blue-600 hover:text-blue-800"
                                             >
                                                 View
-                                            </a>
+                                            </button>
                                         ) : (
                                             <span className="text-gray-400">-</span>
                                         )}
@@ -201,6 +204,12 @@ const AVSData = () => {
                         Next
                     </button>
                 </div>
+
+                <MetadataModal
+                    uri={selectedMetadata || ''}
+                    isOpen={!!selectedMetadata}
+                    onClose={() => setSelectedMetadata(null)}
+                />
             </div>
         </div>
     );
