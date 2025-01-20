@@ -41,7 +41,7 @@ const AVSData = () => {
 
     const toggleSort = (field: string) => {
         if (sortField === field) {
-            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+            setSortDirection((prev: SortDirection) => prev === 'asc' ? 'desc' : 'asc');
         } else {
             setSortField(field as SortField);
             setSortDirection('desc');
