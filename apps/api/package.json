@@ -17,11 +17,12 @@
     "apollo-server-express": "^3.13.0",
     "cross-fetch": "^3.2.0",
     "graphql": "^16.10.0",
-    "shared": "workspace:*",
-    "ts-morph": "^14.0.0"
+    "@el-react-nest/shared": "workspace:*",
+    "ts-morph": "^14.0.0",
+    "node-cache": "^5.1.2",
+    "@nestjs/axios": "^3.0.1"
   },
   "devDependencies": {
-    "@nestjs/axios": "^4.0.0",
     "@nestjs/cli": "^9.4.0",
     "@nestjs/common": "^9.4.3",
     "@nestjs/core": "^9.4.3",

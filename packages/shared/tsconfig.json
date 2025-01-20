@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "strict": true,
-    "module": "ESNext",
-    "target": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "target": "ES2018",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "declaration": true,
-    "moduleResolution": "Node",
+    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { GET_AVS_DATA } from '../graphql/queries';
-import { formatDistanceToNow } from 'date-fns';
 import { AVS } from '../types/avs';
 import { useState, useEffect } from 'react';
-import { SortField, SortDirection } from '../types/sort';
+import { SortField, SortDirection, formatAddress, formatTimestamp, CONSTANTS } from '@el-react-nest/shared';
 import AVSBubbleChart from './AVSBubbleChart';
 
 interface AVSQueryResult {
@@ -12,9 +11,9 @@ interface AVSQueryResult {
 
 const AVSData = () => {
     const [page, setPage] = useState(1);
-    const pageSize = 10;
-    const [sortField, setSortField] = useState('lastUpdateBlockTimestamp');
-    const [sortDirection, setSortDirection] = useState('desc');
+    const pageSize = CONSTANTS.DEFAULT_PAGE_SIZE;
+    const [sortField, setSortField] = useState<SortField>(SortField.LAST_UPDATE_TIMESTAMP);
+    const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
     const [selectedAVSId, setSelectedAVSId] = useState<string>();
 
     const { data, loading, error } = useQuery<AVSQueryResult>(GET_AVS_DATA, {
@@ -42,7 +41,7 @@ const AVSData = () => {
         if (sortField === field) {
             setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
         } else {
-            setSortField(field);
+            setSortField(field as SortField);
             setSortDirection('desc');
         }
     };
@@ -111,16 +110,13 @@ const AVSData = () => {
                                     onClick={() => setSelectedAVSId(avs.id)}
                                 >
                                     <td className="px-2 sm:px-4 py-3">
-                                        <span
-                                            className="font-mono text-xs sm:text-sm avs-id"
-                                            data-text={`${avs.id.slice(0, 4)}...${avs.id.slice(-4)}`}
-                                        >
-                                            {`${avs.id.slice(0, 4)}...${avs.id.slice(-4)}`}
+                                        <span className="font-mono text-xs sm:text-sm">
+                                            {formatAddress(avs.id)}
                                         </span>
                                     </td>
                                     <td className="px-2 sm:px-4 py-3">
                                         <span className="font-mono text-xs sm:text-sm">
-                                            {`${avs.owner.slice(0, 4)}...${avs.owner.slice(-4)}`}
+                                            {formatAddress(avs.owner)}
                                         </span>
                                     </td>
                                     <td className="px-2 sm:px-4 py-3 text-center">
@@ -144,7 +140,7 @@ const AVSData = () => {
                                         </span>
                                     </td>
                                     <td className="px-2 sm:px-4 py-3">
-                                        {formatDistanceToNow(new Date(parseInt(avs.lastUpdateBlockTimestamp) * 1000), { addSuffix: true })}
+                                        {formatTimestamp(avs.lastUpdateBlockTimestamp)}
                                     </td>
                                     <td className="px-2 sm:px-4 py-3">
                                         {avs.metadataURI ? (

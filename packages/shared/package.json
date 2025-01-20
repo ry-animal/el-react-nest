@@ -1,15 +1,16 @@
 {
-  "name": "shared",
+  "name": "@el-react-nest/shared",
   "version": "0.1.0",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w",
-    "lint": "eslint src/**/*.ts"
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "eslint": "^8.40.0"
   }
 }

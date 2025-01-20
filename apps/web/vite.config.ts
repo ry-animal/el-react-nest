@@ -8,9 +8,14 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react(), svgr()],
+    build: {
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
+    },
     resolve: {
       alias: {
-        shared: path.resolve(__dirname, '../../packages/shared/src'),
+        '@el-react-nest/shared': path.resolve(__dirname, '../../packages/shared/src/index.ts'),
       },
     },
     server: {

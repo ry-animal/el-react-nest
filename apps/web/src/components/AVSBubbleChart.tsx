@@ -2,6 +2,7 @@ import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, ResponsiveContaine
 import { AVS } from '../types/avs';
 import { useState, useEffect } from 'react';
 import '../styles/glitch.css';
+import { formatAddress } from '@el-react-nest/shared';
 
 interface AVSBubbleChartProps {
     data: AVS[];
@@ -75,9 +76,9 @@ const AVSBubbleChart = ({ data, selectedId }: AVSBubbleChartProps) => {
             <h3 className="text-lg font-mono font-bold mb-4 text-center">
                 <span
                     className={isGlitching ? 'glitch-text' : 'gradient-text'}
-                    data-text={`AVS Metrics: ${selectedAVS.id.slice(0, 4)}...${selectedAVS.id.slice(-4)}`}
+                    data-text={`AVS Metrics: ${formatAddress(selectedAVS.id)}`}
                 >
-                    AVS Metrics: {`${selectedAVS.id.slice(0, 4)}...${selectedAVS.id.slice(-4)}`}
+                    AVS Metrics: {formatAddress(selectedAVS.id)}
                 </span>
             </h3>
             <ResponsiveContainer width="100%" height="100%">
