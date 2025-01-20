@@ -58,7 +58,6 @@ export class SubgraphService {
 
                 allData = response.data?.data?.avss || [];
                 
-                // Cache the full dataset
                 this.cache.set(cacheKey, allData, 300);
             }
 
@@ -141,7 +140,6 @@ export class SubgraphService {
                 throw new BadRequestException('URL is required');
             }
 
-            // Normalize IPFS URLs
             if (url.startsWith('ipfs://')) {
                 url = url.replace('ipfs://', 'https://ipfs.io/ipfs/');
             }

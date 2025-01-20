@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 
 const httpLink = createHttpLink({
-  uri: '/api/graphql', // Use the proxy path instead of direct URL
+  uri: '/api/graphql',
 });
 
 export const client = new ApolloClient({

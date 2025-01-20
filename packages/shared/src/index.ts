@@ -1,4 +1,5 @@
 // Export all functions, types, and constants
+
 export const formatAddress = (address: string, prefixLength = 4, suffixLength = 4): string => {
   if (!address) return '';
   return `${address.slice(0, prefixLength)}...${address.slice(-suffixLength)}`;
