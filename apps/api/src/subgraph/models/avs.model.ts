@@ -12,23 +12,17 @@ export class AVS {
   operatorCount: number;
 
   @Field(() => Int)
-  operatorSetCount: number;
-
-  @Field(() => Int)
-  slashingCount: number;
-
-  @Field(() => Int)
   strategyCount: number;
 
   @Field(() => Int)
   stakerCount: number;
 
-  @Field()
-  metadataURI: string;
+  @Field(() => Int)
+  slashingCount: number;
 
-  @Field()
-  lastUpdateBlockNumber: string;
+  @Field(() => Int)
+  lastUpdateBlockTimestamp: number;
 
-  @Field()
-  lastUpdateBlockTimestamp: string;
+  @Field({ nullable: true })
+  metadataURI?: string;
 }

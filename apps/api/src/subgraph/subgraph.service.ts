@@ -4,6 +4,22 @@ import NodeCache from 'node-cache';
 import { firstValueFrom } from 'rxjs';
 import { SortField, SortDirection, sortAVSData, isValidEthereumAddress } from '@el-react-nest/shared';
 
+interface AVSData {
+    id: string;
+    owner: string;
+    operatorCount: number;
+    strategyCount: number;
+    stakerCount: number;
+    slashingCount: number;
+    lastUpdateBlockTimestamp: number;
+    metadataURI: string;
+}
+
+interface AVSOperator {
+    id: string;
+    avs: AVSData;
+}
+
 @Injectable()
 export class SubgraphService {
     private readonly endpoint = 'https://subgraph.satsuma-prod.com/027e731a6242/eigenlabs/eigen-graph-testnet-holesky/api';
@@ -11,70 +27,45 @@ export class SubgraphService {
 
     constructor(private readonly httpService: HttpService) {}
 
-    async getAVSData(skip: number, first: number, orderBy: string, orderDirection: string) {
-        const typeQuery = `
-            query {
-                __type(name: "AVS") {
-                    fields {
-                        name
-                        type {
-                            name
-                            kind
-                        }
-                    }
-                }
-            }
-        `;
-
+    async getAVSData(skip: number, first: number, orderBy: string, orderDirection: string): Promise<AVSData[]> {
+        const cacheKey = 'all_avs_data';
         try {
-            const typeResponse = await firstValueFrom(
-                this.httpService.post(this.endpoint, {
-                    query: typeQuery,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-            );
-            
-            const query = `
-                query GetAVSs($skip: Int!, $first: Int!, $orderBy: String!, $orderDirection: String!) {
-                    avss(
-                        skip: $skip
-                        first: $first
-                        orderBy: $orderBy
-                        orderDirection: $orderDirection
-                    ) {
-                        id
-                        owner
-                        operatorCount
-                        strategyCount
-                        stakerCount
-                        slashingCount
-                        lastUpdateBlockNumber
-                        lastUpdateBlockTimestamp
-                        metadataURI
-                    }
-                }
-            `;
+            let allData = this.cache.get<AVSData[]>(cacheKey);
 
-            const response = await firstValueFrom(
-                this.httpService.post(this.endpoint, {
-                    query,
-                    variables: {
-                        skip,
-                        first,
-                        orderBy,
-                        orderDirection
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-            );
+            if (!allData) {
+                const response = await firstValueFrom(
+                    this.httpService.post<{
+                        data: {
+                            avss: AVSData[];
+                        };
+                    }>(this.endpoint, {
+                        query: `
+                            query GetAVSs {
+                                avss(first: 1000) {  # Fetch up to 1000 records
+                                    id
+                                    owner
+                                    operatorCount
+                                    strategyCount
+                                    stakerCount
+                                    slashingCount
+                                    lastUpdateBlockTimestamp
+                                    metadataURI
+                                }
+                            }
+                        `
+                    })
+                );
 
-            return response.data?.data?.avss || [];
+                allData = response.data?.data?.avss || [];
+                
+                // Cache the full dataset
+                this.cache.set(cacheKey, allData, 300);
+            }
+
+            const sortedData = this.validateAndSortData([...allData], orderBy, orderDirection);
+            return sortedData.slice(skip, skip + first);
         } catch (error) {
-            console.error('Error:', error.response?.data || error.message);
+            console.error('Error fetching AVS data:', error);
             throw error;
         }
     }
@@ -126,8 +117,7 @@ export class SubgraphService {
         }
     }
 
-    validateAndSortData(data: any[], sortField: string, sortDirection: string) {
-        
+    validateAndSortData(data: AVSData[], sortField: string, sortDirection: string): AVSData[] {
         if (!Object.values(SortField).includes(sortField as SortField)) {
             throw new BadRequestException('Invalid sort field');
         }
@@ -142,6 +132,56 @@ export class SubgraphService {
     validateAddress(address: string) {
         if (!isValidEthereumAddress(address)) {
             throw new BadRequestException('Invalid Ethereum address');
+        }
+    }
+
+    async fetchMetadata(url: string) {
+        try {
+            if (!url) {
+                throw new BadRequestException('URL is required');
+            }
+
+            // Normalize IPFS URLs
+            if (url.startsWith('ipfs://')) {
+                url = url.replace('ipfs://', 'https://ipfs.io/ipfs/');
+            }
+
+            const validUrl = new URL(url);
+            if (!validUrl.protocol.startsWith('http')) {
+                throw new BadRequestException('Invalid URL protocol');
+            }
+
+            const response = await firstValueFrom(
+                this.httpService.get(url, {
+                    headers: {
+                        'Accept': '*/*',
+                        'User-Agent': 'Mozilla/5.0 (compatible; EigenLayerBot/1.0)',
+                    },
+                    timeout: 10000,
+                    maxRedirects: 5,
+                    responseType: 'text',
+                    validateStatus: status => status < 500 // Accept any status < 500
+                })
+            );
+
+            if (response.status === 404) {
+                throw new Error('Metadata not found');
+            }
+
+            try {
+                const jsonData = typeof response.data === 'string' 
+                    ? JSON.parse(response.data)
+                    : response.data;
+                return jsonData;
+            } catch (parseError) {
+                throw new Error('Response is not valid JSON');
+            }
+        } catch (error) {
+            console.error('Error fetching metadata:', error, 'URL:', url);
+            if (error instanceof Error) {
+                throw new BadRequestException(`Failed to fetch metadata: ${error.message}`);
+            }
+            throw new BadRequestException('Failed to fetch metadata');
         }
     }
 }

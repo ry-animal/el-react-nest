@@ -1,6 +1,21 @@
-# EigenLayer AVS Dashboard
+# EigenLayer Dashboard
 
-A dashboard application for Active Validator Services (AVS) data from EigenLayer's subgraphs.
+A dashboard application for viewing and interacting with EigenLayer AVS (Actively Validated Service).
+
+## Features
+
+- View AVS data in a sortable, paginated table
+- Interactive bubble chart visualization
+- View AVS metadata in a formatted modal
+- Historical trends and statistics
+- Real-time data updates via GraphQL subscriptions
+
+## Tech Stack
+
+- **Frontend**: React, TypeScript, Tailwind CSS, Apollo Client
+- **Backend**: NestJS, GraphQL
+- **Data**: EigenLayer Subgraph (Satsuma)
+- **Build Tools**: Vite, Turbo, pnpm
 
 ## Project Structure
 
@@ -19,17 +34,6 @@ A dashboard application for Active Validator Services (AVS) data from EigenLayer
 └── packages
     └── shared          # Shared types and utilities
 ```
-
-## Features
-
-- Real-time AVS data visualization using Recharts
-- Sortable and paginated AVS data table
-- Interactive bubble chart showing relationships between:
-  - Operator count
-  - Strategy count
-  - Staker count
-  - Slashing incidents
-- GraphQL integration with EigenLayer's subgraph
 
 ## Getting Started
 
@@ -68,8 +72,8 @@ The application is configured for deployment on Vercel:
 The application will be available at:
 
 - Frontend: http://localhost:3000
-- API: http://localhost:4000
-- GraphQL Playground: http://localhost:4000/graphql
+- API: http://localhost:3001
+- GraphQL Playground: http://localhost:3001/graphql
 
 ## Testing
 
