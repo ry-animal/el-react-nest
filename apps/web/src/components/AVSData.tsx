@@ -1,10 +1,9 @@
-import { useQuery } from '@apollo/client';
-import { GET_AVS_DATA } from '../graphql/queries';
-import { AVS } from '../types/avs';
 import { useState, useEffect } from 'react';
 import { SortField, SortDirection, formatAddress, formatTimestamp, CONSTANTS } from '@el-react-nest/shared';
+import { useAVSData } from '../hooks/useAVSData';
 import AVSBubbleChart from './AVSBubbleChart';
 import { MetadataModal } from './MetadataModal';
+import { AVS } from '../types/avs';
 
 interface AVSQueryResult {
     getAVSData: AVS[];
@@ -18,25 +17,20 @@ const AVSData = () => {
     const [selectedAVSId, setSelectedAVSId] = useState<string>();
     const [selectedMetadata, setSelectedMetadata] = useState<string | null>(null);
 
-    const { data, loading, error } = useQuery<AVSQueryResult>(GET_AVS_DATA, {
-        variables: {
-            skip: (page - 1) * pageSize,
-            first: pageSize,
-            orderBy: sortField,
-            orderDirection: sortDirection
-        }
+    const { data: avsList = [], isLoading, error } = useAVSData({
+        skip: (page - 1) * pageSize,
+        first: pageSize,
+        orderBy: sortField,
+        orderDirection: sortDirection,
     });
 
-    const avsList = data?.getAVSData || [];
-
     useEffect(() => {
-
         if (avsList.length > 0 && !avsList.find(avs => avs.id === selectedAVSId)) {
             setSelectedAVSId(avsList[0].id);
         }
     }, [page, avsList, selectedAVSId]);
 
-    if (loading) return <div className="p-4">Loading AVS data...</div>;
+    if (isLoading) return <div className="p-4">Loading AVS data...</div>;
     if (error) return <div className="p-4 text-red-500">Error loading AVS Data: {error.message}</div>;
 
     const toggleSort = (field: string) => {

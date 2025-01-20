@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 
 class ResizeObserverMock {
     observe() {
@@ -36,4 +38,8 @@ Object.defineProperty(window, 'matchMedia', {
         removeEventListener: jest.fn(),
         dispatchEvent: jest.fn(),
     })),
+});
+
+afterEach(() => {
+  cleanup();
 });

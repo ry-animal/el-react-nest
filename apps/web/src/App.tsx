@@ -1,11 +1,21 @@
-import { ApolloProvider } from '@apollo/client';
-import client from './graphql/client';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AVSData from './components/AVSData';
 import logo from './assets/el-logo.svg';
 import githubLogo from './assets/github-logo.svg';
 
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
 const App = () => (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
         <div className="min-h-screen bg-[#f7f6f3]">
             <header className="bg-[#fff]/80 shadow backdrop-blur-sm">
                 <div className="max-w-7xl mx-auto py-6 px-4">
@@ -46,7 +56,8 @@ const App = () => (
                 <AVSData />
             </div>
         </div>
-    </ApolloProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
 );
 
 export default App; 

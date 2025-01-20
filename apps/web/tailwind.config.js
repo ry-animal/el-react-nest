@@ -1,13 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
         mono: ['IBM Plex Mono', 'monospace'],
       },
       colors: {
-        eigen: 'rgb(26,12,109)',
+        eigen: '#1a1a1a',
       },
     },
   },

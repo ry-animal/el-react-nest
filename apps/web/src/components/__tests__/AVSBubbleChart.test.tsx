@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import AVSBubbleChart from '../AVSBubbleChart';
 import { ReactNode } from 'react';
+import { AVS } from '../../types/avs';
 
 jest.mock('recharts', () => ({
     ResponsiveContainer: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -19,16 +20,26 @@ jest.mock('recharts', () => ({
     )
 }));
 
-const mockData = [
+const mockData: AVS[] = [
     {
-        id: '0x1234...5678',
-        owner: '0xabcd...efgh',
+        id: '0x1234',
+        owner: '0xabcd',
         operatorCount: 5,
         strategyCount: 3,
         stakerCount: 10,
         slashingCount: 0,
-        lastUpdateBlockTimestamp: '1677777777',
+        lastUpdateBlockTimestamp: 1677777777,
         metadataURI: 'https://example.com'
+    },
+    {
+        id: '0x5678',
+        owner: '0xefgh',
+        operatorCount: 3,
+        strategyCount: 2,
+        stakerCount: 8,
+        slashingCount: 1,
+        lastUpdateBlockTimestamp: 1677777888,
+        metadataURI: 'https://example.com/2'
     }
 ];
 
@@ -49,5 +60,13 @@ describe('AVSBubbleChart', () => {
     test('handles empty data', () => {
         render(<AVSBubbleChart data={[]} />);
         expect(screen.queryByText(/AVS Metrics:/)).not.toBeInTheDocument();
+    });
+
+    it('renders without crashing', () => {
+        render(<AVSBubbleChart data={mockData} selectedId={mockData[0].id} />);
+    });
+
+    it('renders with empty data', () => {
+        render(<AVSBubbleChart data={[]} />);
     });
 }); 
