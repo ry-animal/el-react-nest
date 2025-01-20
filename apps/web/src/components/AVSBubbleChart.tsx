@@ -100,6 +100,9 @@ const AVSBubbleChart = ({ data, selectedId }: AVSBubbleChartProps) => {
                         dataKey="y"
                         label={{ value: 'Count', angle: -90, position: 'insideLeft', offset: -30 }}
                         padding={{ top: 20, bottom: 20 }}
+                        allowDecimals={false}
+                        domain={[0, 'auto']}
+                        tickFormatter={(value) => Math.round(value).toString()}
                     />
                     <ZAxis
                         type="number"

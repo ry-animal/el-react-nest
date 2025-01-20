@@ -147,6 +147,56 @@ query GetAVSData(
 }
 ```
 
+# Questions
+
+### Constraints for Mass Adoption
+
+- Rate limiting from subgraph API - needs caching
+- High GraphQL query load requires pagination/optimization
+- Cross-browser/device wallet integration complexity
+- Data size & real-time update performance impacts
+- Data validation/sanitization requirements
+
+### Potential Future Dashboard Features
+
+- Real-time websocket updates
+- Advanced compound filtering
+- Data export functionality
+- Mobile optimization
+- Performance metrics/analytics
+- Direct wallet integration
+- Alert system
+
+### Data Presentation Tradeoffs
+
+- Paginated tables vs infinite scroll
+- Relationship visualization (bubble charts) sacrifices detail for overview
+- Focus on key metrics
+- Real-time vs cached updates
+
+### Patterns in Data
+
+- Operator/strategy count relationships
+- Slashing correlation with operator set size
+- Staker behavior temporal patterns
+- Strategy popularity metrics
+
+### Backend API Benefits
+
+- Data aggregation/transformation
+- Performance caching
+- Rate limiting/security
+- Custom business logic
+- Multi-source data enrichment
+- Error handling/retries
+  Missing Subgraph Features
+  Historical trends
+  Operator performance metrics
+  Detailed slashing reasons
+  Entity relationship mapping
+  Time-series aggregations
+  Custom filtering
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details
