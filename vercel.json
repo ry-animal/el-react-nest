@@ -1,12 +1,18 @@
 {
   "builds": [
     {
+      "src": "packages/shared/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "buildCommand": "pnpm build"
+      }
+    },
+    {
       "src": "apps/web/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "apps/web/dist",
-        "buildCommand": "pnpm build",
-        "installCommand": "pnpm install"
+        "distDir": "dist",
+        "buildCommand": "pnpm build"
       }
     },
     {
@@ -17,7 +23,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "apps/api/src/index.ts"
+      "dest": "apps/api/src/main.ts"
     },
     {
       "src": "/(.*)",

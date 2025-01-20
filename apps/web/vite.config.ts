@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@el-react-nest/shared': path.resolve(__dirname, '../../packages/shared/src/index.ts'),
+        '@el-react-nest/shared': path.resolve(__dirname, '../../packages/shared/dist/index.mjs'),
       },
     },
     server: {

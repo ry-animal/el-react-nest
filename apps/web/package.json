@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --outDir dist",
+    "build": "pnpm --filter @el-react-nest/shared build && tsc && vite build --outDir dist",
     "lint": "eslint src --ext ts,tsx",
     "preview": "vite preview",
     "test": "jest"
