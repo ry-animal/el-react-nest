@@ -12,9 +12,19 @@ export default defineConfig(({ mode }) => {
       commonjsOptions: {
         transformMixedEsModules: true,
       },
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', '@apollo/client'],
+            shared: ['@el-react-nest/shared']
+          }
+        }
+      }
     },
     resolve: {
       alias: {
+        '@': path.resolve(__dirname, './src'),
         '@el-react-nest/shared': path.resolve(__dirname, '../../packages/shared/src/index.ts'),
       },
     },
